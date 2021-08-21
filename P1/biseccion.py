@@ -53,10 +53,10 @@ def biseccion(f,a,b,tol,iterMax):
     fig, graf=plt.subplots()
     #Se plotean la iteracion y el error
     graf.plot(ejex,er,'b',marker='o',markerfacecolor='red',markersize=10)
-    graf.set_xlabel('Iteraciones ($k)')#Nombre del eje x
+    graf.set_xlabel('Iteraciones ($k$)')#Nombre del eje x
     graf.set_ylabel('$|f(x_k)|$') #Nombre eje y
     #Titulo grafica
-    graf.set_title('Método de Newton-Raphson (Iteraciones vs Error)');  
+    graf.set_title('Método de Bisección (Iteraciones vs Error)');  
     graf.grid(True) #Mostrar grid
     plt.show() #Mostrar grafica
     
@@ -69,8 +69,8 @@ def biseccion(f,a,b,tol,iterMax):
 f='exp(x)-2*x-10' 
 a=2
 b=4
-tol=10**-5;
-iterMax=1000;
+tol=10**-5
+iterMax=1000
 
 y= biseccion(f,a,b,tol,iterMax)
 print(y)
