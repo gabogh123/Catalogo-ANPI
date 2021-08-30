@@ -1,6 +1,7 @@
 import sympy as sp
 import numpy as np
 from sympy import solve
+import math
 
 
 def variables_simbolicas(variables):
@@ -35,23 +36,29 @@ def descenso():
     yk = y0
     
 
-    #while k<iterMax and error>tol:
+    while k<iterMax:
 
-    f2 = f1.subs('y',v0[1])
-           
-    xk = solve(sp.diff(f2,x))[0]
+        f2 = f1.subs('y',yk)
+               
+        xk = solve(sp.diff(f2,x))[0]
 
-    f3 = f1.subs('x',xk)
+        f3 = f1.subs('x',xk)
+            
+        yk = solve(sp.diff(f3,y))[0]
+
+        vk = [xk,yk]
+
+        #error = [(grad[0].subs('x',xk)).subs('y',yk),(grad[1].subs('x',xk)).subs('y',yk)]
+
+        error = math.sqrt( ((grad[0].subs('x',xk)).subs('y',yk))**2 + ((grad[1].subs('x',xk)).subs('y',yk))**2  )
+
+        if error<tol:
+            break
         
-    yk = solve(sp.diff(f3,y))[0]
-
-    vk = [xk,yk]
-
-    
  
     
    
-    print(error)
+    return [vk, error]
                 
                 
     
