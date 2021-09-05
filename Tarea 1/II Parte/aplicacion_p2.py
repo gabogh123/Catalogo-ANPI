@@ -22,6 +22,7 @@ def aplicacion_p2():
     f = ((log(7/d,10))/( 0.01*log(10)))  + ((d*(6-d)) / (((g**2) / (2*1*(40/log(10))**2)) * ( (1/g) + (1/(pi*100)) ))) #Listo   
 
     df = sp.diff(f,d)
+    
 
     while error>tol and k<iterMax:
 
@@ -29,13 +30,15 @@ def aplicacion_p2():
 
         error = abs((dk2-dk)/dk2)
 
-        dk = dk2
+        dk = float(dk2)
 
         k=k+1
 
-        return [float(dk2),float(error)]
+    return [float(dk2),float(error)]
 
-        
+
+
+print(aplicacion_p2())      
 
     
 
