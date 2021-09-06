@@ -16,6 +16,8 @@ def newton_H_m1(f,x0,tol,iterMax):
 #Se inicializan los parametros y se convierte la expresion de string a funcion
     x=sp.Symbol('x')
 
+    B=2
+    L = 1
     
     f1=sp.sympify(f)
     df1 = sp.diff(f1,x)
@@ -27,11 +29,16 @@ def newton_H_m1(f,x0,tol,iterMax):
 
     
 #Funcion h de la derivacion del metodo de newton-raphson     
-    h = 1
-    h1 = sp.sympify(h)
+#    h = 1
+#    h1 = sp.sympify(h)
 
 
     while err>tol and k<iterMax: #Criterios de parada del programa
+
+#        h = 1/(1+B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk))))
+
+        h = 1 + (L*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk)))  / ((1+B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk))) )*(1+2*B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk)))) ) )
+        
         k=k+1
         
         n=sp.N(f1.subs(x,xk)) #Sustitucion de xk en la funcion f
@@ -44,8 +51,8 @@ def newton_H_m1(f,x0,tol,iterMax):
         
 
 #Se imprimen la aproximacion y el error
-    print( "Aproximación: " + str(xk))
-    print ("Error: " + str(err))
+    return ['Aproximación: ']+[xk]+ [   'Error: ']+ [err]
+
 
 
         
@@ -96,6 +103,7 @@ def newton_H_m2(f,x0,tol,iterMax):
 
 
 
+
 ###########################################################################################################################
 
 
@@ -139,7 +147,7 @@ def newton_G_m1(f,x0,tol,iterMax):
     #Se imprimen la aproximacion y el error
         
     return ['Aproximación: ']+[xk]+ [   'Error: ']+ [err]
-    
+
 
 
 #############################################################################################################################
