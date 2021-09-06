@@ -2,8 +2,7 @@ function p3_solucion_aplicacion()
   pkg load symbolic %Se carga el paquete symbolic
  
   f = '(5512026*x^2)+(28471210*y^2)-(5000*x)-(8660*y)'; %String que representa la funcion a evaluar
-  xk = randi([0 10],1,2)
-  xk = xk'; %Vector con valores iniciales
+  xk = [0.000786 ; 0.0000878]
   tol = 0.00001; %Valor de tolerda
   iterMax = 1000;
   tolerancia = 0.00001;
@@ -30,7 +29,7 @@ function bfgs(f,xk,tol,iterMax, tolerancia)
   grad_f = matlabFunction(gradient(f1,[x,y])) 
 
   %calculo del gradiente
-  gk = grad_f(xk(1), xk(2))
+  gk = grad_f(xk(1), xk(2));
   
   
   Bk = eye(n);   % matriz identidad nxn donde n=cantidad de variables de entrada
@@ -63,8 +62,8 @@ function bfgs(f,xk,tol,iterMax, tolerancia)
    
    % se calcula el nuevo xk y gk
    xk = xk + (lambda*pk);
-   gk = grad_f(xk(1), xk(2))
-   %gk = grad_f(xk(1), xk(2), xk(3), xk(4), xk(5)) 
+   gk = grad_f(xk(1), xk(2));
+   
    
    % Luego calcular Bk+1 con su respectiva funcion (2.10 en el documento) donde sk = xk - xk_pasado y yk = gk - gk_pasado
    
