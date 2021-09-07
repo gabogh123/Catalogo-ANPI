@@ -1,4 +1,4 @@
-"Importacion de las funciones del archivo metodos_p2
+#Importacion de las funciones del archivo metodos_p2
 from metodos_p2 import *
 
 #Definicion de parametros iniciales
@@ -14,7 +14,7 @@ def prueba_newton_H_m1():
 
 #Salida: Aproximacion y error del método
 
-    print("Método 1: H(x) = 1")
+    print("Método 1: H(x) = 1 + Lambda*u/(1+Bu)(1+2Bu)")
     
     print("f = cos(2x)-x")
 
