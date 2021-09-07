@@ -27,16 +27,9 @@ def newton_H_m1(f,x0,tol,iterMax):
     k=0
     xk=x0
 
-    
-#Funcion h de la derivacion del metodo de newton-raphson     
-#    h = 1
-#    h1 = sp.sympify(h)
-
-
     while err>tol and k<iterMax: #Criterios de parada del programa
 
-#        h = 1/(1+B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk))))
-
+#Funcion h de la derivacion del metodo de newton-raphson 
         h = 1 + (L*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk)))  / ((1+B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk))) )*(1+2*B*(sp.N(f1.subs(x,xk))/sp.N(df1.subs(x,xk)))) ) )
         
         k=k+1
