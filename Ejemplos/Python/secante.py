@@ -1,22 +1,39 @@
-import math
-import sympy
+import numpy as np
+import sympy as sp
+
+def secante(f,x0,x1,tol,iterMax):
+
+    x = sp.Symbol('x')
+    f1 = sp.sympify(f)
+
+    k = 0
+    error = tol + 1
+
+    while k < iterMax:
+
+        fx0 = sp.N(f1.subs(x,x0))
+        fx1 = sp.N(f1.subs(x,x1))
+
+        xk = x1 - fx1*((x1-x0) / (fx1 - fx0))
+
+        x0 = x1
+        x1 = xk
+
+        error = abs(f1.subs(x,xk))
+
+        if error<tol:
+            break
+
+        k = k+1
+
+    return [xk , k , error]
 
 
-"""
-Metodo iterativo de la secante, para solucion de ecuaciones no lineales.
-Entradas: valores iniciales de iteracion, tolerancia minima del resultado y
-funcion a evaluar en formato lambda.
-Salidas:Valor aproximado y numero de iteraciones
-"""
-def secante(x0, x1, tolerance, function):
-    x_k = x1
-    x_k_1 = x0
-    nIterations = 0
-    while abs(eval(function)(x_k))  >= tolerance:
-        temp = x_k
-        numerator = (eval(function)(x_k) * (x_k - x_k_1))
-        denominator = (eval(function)(x_k) - eval(function)(x_k_1))
-        x_k = x_k - numerator / denominator
-        x_k_1 = temp
-        nIterations += 1
-    return x_k, nIterations
+f = 'exp(-x**2)-x'
+x0 = 0
+x1 = 1
+tol = 10**-5
+iterMax = 1000
+
+y = secante(f,x0,x1,tol,iterMax)
+print(y)

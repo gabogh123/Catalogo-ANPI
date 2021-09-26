@@ -1,19 +1,45 @@
 import math
-import sympy
+import sympy as sp
+
+def newton_raphson(f,x0,tol,iterMax):
+
+    x = sp.Symbol('x')
+
+    f1 = sp.sympify(f)
+
+    df1 = sp.diff(f1,x)
+
+    error = tol+1
+
+    k = 0
+
+    xk = x0
+
+    while k < iterMax:
+
+        n = sp.N(f1.subs(x,xk))
+        d = sp.N(df1.subs(x,xk))
+
+        k = k+1
+
+        xk = xk - (n/d)
+
+        error = abs(f1.subs(x,xk))
+
+        if error<tol:
+            break
+
+    return [xk,k,error]
 
 
-"""
-Metodo iterativo de Newton-Raphson, para solucion de ecuaciones no lineales.
-Entradas: valor inicial de iteracion, tolerancia minima del resultado y
-funcion a evaluar en formato lambda.
-Salidas:Valor aproximado y numero de iteraciones
-"""
-def newton_raphson(x0, tolerance, function):
-    x = sympy.symbols('x')
-    nIterations = 0
-    x_k = x0
-    while abs(eval(function)(x_k))  >= tolerance:
-        deriv = sympy.diff(eval(function)(x), x)
-        x_k = x_k - eval(function)(x_k) / deriv.evalf(subs={x: x_k})
-        nIterations += 1
-    return x_k, nIterations
+
+f = 'cos(2*x)**2 - x**2'
+x0 = 3/4
+tol = 10**-5
+iterMax = 1000
+
+y = newton_raphson(f,x0,tol,iterMax)
+print(y)
+
+        
+        

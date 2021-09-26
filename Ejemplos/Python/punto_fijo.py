@@ -1,17 +1,40 @@
+import sympy as sp
+import numpy as np
 import math
-import sympy
+
+def punto_fijo(f,x0,tol,iterMax):
+
+    x = sp.Symbol('x')
+    f1 = sp.sympify(f)
+
+    k = 0
+    error = tol + 1
+
+    xk = x0
+
+    while k<iterMax:
+
+        xk2 = sp.N(f1.subs(x,xk))
+
+        xk = xk2
+
+        error = abs(xk2 - xk)
+
+        k += 1
+
+        if error<tol:
+            break
+
+    return [xk2,k,error]
 
 
-"""
-Metodo iterativo del punto fijo, para solucion de ecuaciones no lineales.
-Entradas: valor incial de iteracion, tolerancia minima del resultado y
-funcion a evaluar en formato lambda.
-Salidas:Valor aproximado y numero de iteraciones
-"""
-def punto_fijo(x0, tolerance, phi):
-    nIterations = 0;
-    x_k = x0;
-    while abs(eval(phi)(x_k) - x_k) >= tolerance:
-        x_k = eval(phi)(x_k)
-        nIterations += 1
-    return x_k, nIterations
+
+f = 'log(2*x+1)'
+x0 = 7
+tol = 10**-5
+iterMax = 1000
+
+
+y = punto_fijo(f,x0,tol,iterMax)
+print(y)
+    
