@@ -1,16 +1,51 @@
-function [x_k, nIterations] = biseccion (a, b, tolerance, functionStr)
-  func = str2func(functionStr);
-  x_k = (a + b) / 2;
-  nIterations = 0;
-  if (func(a) * func(b) < 0)
-    while abs(func(x_k)) >= tolerance
-      if func(a) * func(x_k) < 0
-        b = x_k;
+function biseccion()
+  
+  clc;clear;
+  
+  f = '(exp(x) -2*x - 10)';
+  a = 2;
+  b = 4;
+  tol = 0.00001;
+  iterMax = 100;
+  
+  [xk k error] = Biseccion(f,a,b,tol,iterMax)
+
+ end 
+  
+ 
+  
+function [xk k error] = Biseccion(f,a,b,tol,iterMax)
+  
+  pkg load symbolic
+  
+  f1 = matlabFunction(sym(f));
+ 
+  
+  for k = 1:iterMax
+    
+    if f1(a) * f1(b) < 0
+      
+      xk = (a+b)/2;
+      
+      if f1(a)*f1(xk)<0
+        
+        b = xk;
+        
       else
-        a = x_k;
-      end
-      nIterations += 1;
-      x_k = (a + b) / 2;
-    endwhile
-  endif
+        a = xk;
+        
+      endif
+      
+      error = abs(f1(xk));
+    
+      if error<tol
+      
+        break
+      endif
+    
+      
+    endif
+   
+  endfor
+  
 endfunction

@@ -12,13 +12,6 @@ end
 
 
 function [xk k error] = puntoFijo(f,x0,tol,iterMax)
-% Esta funcion aproxima numericamente el resultado de la funcion mediante el metodo del punto fijo
-% Parametros de entrada: f=funcion a resolver
-                        %x0 = valor inicial
-                        %tol = tolerancia
-                        %iterMax = Cantidad de iteraciones maximas    
-% Parametros de salida: xk = valor aproximado
-                        %error = error del metodo
   
   pkg load symbolic %Se carga el paquete symbolic
   
@@ -49,14 +42,7 @@ function [xk k error] = puntoFijo(f,x0,tol,iterMax)
     endif
     
   endfor
-  
-  plot(iter,er) %Se plotean las iteraciones vs error
-  grid on; %Se muestra el grid
-  title("Método del punto fijo (Iteraciones vs Error)");
-  xlabel("Iteraciones");
-  ylabel("|f(xk)|");
-  set(gca, "fontsize", 15)
-  
+   
 end
   
   

@@ -1,21 +1,50 @@
+function falsa_posicion()
+  
+  f = 'cos(x)-x';
+  a = 1/2;
+  b = pi/4;
+  tol = 10**-5;
+  iterMax = 1000;
+  
+  [xk k error] = falsaPosicion(f,a,b,tol,iterMax)
+  
+end
 
-## Metodo iterativo de la posicion falsa para la solucion de ecuaciones
-## no lineales.
-## Entradas: rango inicial, tolerancia minima y funcion a evaluar.
-## Salidas: aproximacion de la solucion y numero de iteraciones.
-function [x_k, nIterations] = falsa_posicion (a, b, tolerance, functionStr)
-  func = str2func(functionStr);
-  nIterations = 0;
-  x_k = b - func(b) * (b-a) / (func(b) - func(a));
-  if func(a)*func(b) <= 0
-    while abs(func(x_k)) >= tolerance
-      if func(a)*func(x_k) < 0
-        b = x_k;
+function [xk k error] = falsaPosicion(f,a,b,tol,iterMax)
+  
+  pkg load symbolic
+  f1 = matlabFunction(sym(f)); 
+  
+
+  
+  for k=1:iterMax
+  
+    
+    if f1(a)*f1(b) < 0
+      
+      xk = b - ((f1(b)*(b-a))/ (f1(b) - f1(a)));
+      
+      if f1(a)*f1(xk) < 0
+        
+        b = xk;
+        
       else
-        a = x_k;
-      end
-      x_k = b - func(b) * (b-a) / (func(b) - func(a));
-      nIterations += 1;
-    endwhile
-  endif
+        
+        a = xk;
+        
+      endif
+      error = abs(f1(xk));
+      
+      if error<tol
+        break
+      endif
+      
+    endif
+    
+    
+  endfor
+  
+  
 endfunction
+
+
