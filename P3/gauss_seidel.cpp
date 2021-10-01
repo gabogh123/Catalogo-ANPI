@@ -1,6 +1,6 @@
 #include <iostream>
 #include <armadillo>
-
+#include "mgl2/mgl.h"
 
 using namespace std;
 using namespace arma;
