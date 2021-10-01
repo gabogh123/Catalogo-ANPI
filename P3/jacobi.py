@@ -1,5 +1,6 @@
 #Se importan la libreria numpy
 import numpy as np
+import matplotlib.pyplot as plt
 
 def jacobi(A,b,x0,tol,iterMax):
 
@@ -16,6 +17,7 @@ def jacobi(A,b,x0,tol,iterMax):
 #Se inicializa el k y el error  
     k = 0
     error = tol+1
+    er = []
 
 #Se define el n como el tamaño de la matriz
     n = len(A)
@@ -64,6 +66,8 @@ def jacobi(A,b,x0,tol,iterMax):
 #Se calcula el error como la norma de A*x - b            
             error = np.linalg.norm(np.dot(A, xk) - b)
 
+            er.append(error)
+
             k += 1 #Se avanza en la iteracióm
 
             if error < tol: #Segunda condición de parada, error menor a la tol
@@ -74,6 +78,18 @@ def jacobi(A,b,x0,tol,iterMax):
    
 #Se retorna la matriz final y el error obtenido    
     print( 'Aproximación: \n',xk, '\n Error:' , error)
+
+    plt.rcParams.update({'font.size': 14})
+    ejex=np.arange(1,k+1,1)
+    fig, graf=plt.subplots()
+    #Se plotean la iteracion y el error
+    graf.plot(ejex,er,'b',marker='o',markerfacecolor='red',markersize=10)
+    graf.set_xlabel('Iteraciones ($k)')#Nombre del eje x
+    graf.set_ylabel('$|f(x_k)|$') #Nombre eje y
+    #Titulo grafica
+    graf.set_title('Método de Jacobi (Iteraciones vs Error)');  
+    graf.grid(True) #Mostrar grid
+    plt.show() #Mostrar grafica
 
 
 A = [[5,1,1],[1,5,1],[1,1,5]]
