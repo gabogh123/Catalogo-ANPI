@@ -6,6 +6,24 @@
 using namespace std;
 using namespace arma;
 
+bool esValida(mat A){
+    int n = A.n_rows;
+    int j = 0;
+    for (int i = 0; i < n; i++){
+        mat cols = A.cols(0, j);
+        mat rows = A.rows(0,i);
+        mat submat = A( span(0, i), span(0, j));
+        cout << submat << endl;
+        j += 1;
+        double deter = (double)det(submat);
+        
+        if (deter == numeric_limits<double>::epsilon()){
+            return false;
+            }
+    }
+    return true;
+}
+
 
 vector<mat> fact_lu(mat A, mat b){
     /**
@@ -16,27 +34,33 @@ vector<mat> fact_lu(mat A, mat b){
         b: vector xi elementos, donde i es la cantidad de incógnitas
     Salida: vector con las matrices triangular inferior L y triangular superior u
     **/
-    vector<mat> LU;		
-    int n = A.n_rows;
-    mat L = zeros<mat>(n,n);
-    mat U = zeros<mat>(n,n);
-    double aux = 0.00;
-    for (int j = 0; j < n; j++){  
-        for (int i = 0; i < n; i++){  	
-            if (i > j && A(i,j) != numeric_limits<double>::epsilon()){
-                aux = -1*A(i, j)/A(j, j);
-                L(i,j) = -1*aux;
-                for(int k = 0; k < n; k++){
-                     A(i,k) = A(i,k) + A(j,k) * aux;
+    vector<mat> LU;
+    if (esValida(A)) {
+        int n = A.n_rows;
+        mat L = zeros<mat>(n,n);
+        mat U = zeros<mat>(n,n);
+        double aux = 0.00;
+        for (int j = 0; j < n; j++){
+            for (int i = 0; i < n; i++){
+                if (i > j && A(i,j) != numeric_limits<double>::epsilon()){
+                    aux = -1*A(i, j)/A(j, j);
+                    L(i,j) = -1*aux;
+                    for(int k = 0; k < n; k++){
+                         A(i,k) = A(i,k) + A(j,k) * aux;
+                    }
+                }
+                else if(i==j){
+                        L(i,j)  = 1;
                 }
             }
-            else if(i==j){
-                    L(i,j)  = 1;
-            }  		
         }
+        LU.push_back(L);
+        LU.push_back(A);
+    } else {
+        cout << "No es valida" << endl;
     }
-    LU.push_back(L);
-    LU.push_back(A); 
+    
+    
     return LU;
 }
 
@@ -48,7 +72,7 @@ mat sust_atras(mat A, mat b){
     Parametros de entrada:
         A: matriz triangular superior de dimensiones nxn
         b: vector modificado según las operaciones de fila
-    Salida: vector solución del sistema    
+    Salida: vector solución del sistema
     **/
     int m = A.n_rows;
     mat X = zeros<mat>(m ,1);
@@ -69,7 +93,7 @@ mat sust_atras(mat A, mat b){
             j -= 1;
         }
     i -= 1;
-    }	
+    }
     return X;
 }
 mat sust_adelan(mat A, mat b){
@@ -80,7 +104,7 @@ mat sust_adelan(mat A, mat b){
     de sustitución hacia atrás.
     Parámetros de entrada:
         A: matriz triangular inferior de dimensiones nxn
-        b: vector modificado según las operaciones de fila  
+        b: vector modificado según las operaciones de fila
     Salida: vector solución
     
     **/
@@ -91,36 +115,20 @@ mat sust_adelan(mat A, mat b){
         aux = b(i);
         for (int j = 0; j < m; j++){
             if (i == j){
-                X(j, 0) = aux/A(i, j); 
-                break; 
-            } 		    
+                X(j, 0) = aux/A(i, j);
+                break;
+            }
             else{
                 aux -= A(i, j)*X(j);
-                }		        
-        }	
+                }
+        }
     }
     return X;
 }
 
 
 
-bool esValida(mat A){
-	int n = A.n_rows;
-	int j = 0;
-	for (int i = 0; i < n; i++){
-		mat cols = A.cols(0, j);
-		mat rows = A.rows(0,i);
-		mat submat = A( span(0, i), span(0, j)); 
-		cout << submat << endl; 
-		j += 1;
-		double deter = (double)det(submat);
-		
-		if (deter == numeric_limits<double>::epsilon()){
-			return false;
-			} 
-	}
-	return true;
-}
+
 
 int main(){
     mat A = {{4, -2, 1}, {20, -7, 12 }, {-8, 13, 17}};
@@ -135,7 +143,7 @@ int main(){
     mat y = sust_adelan(L, b);
     cout << "\n Vector solución X \n "<< endl;
     mat X = sust_atras(U, y);
-    cout << X << endl;  
+    cout << X << endl;
 
     return 0;
 }
