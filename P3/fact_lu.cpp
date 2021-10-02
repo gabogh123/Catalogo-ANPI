@@ -6,7 +6,6 @@
 using namespace std;
 using namespace arma;
 
-/// Función Sustitución Hacia Atrás (Matriz Triangular Superior)
 
 vector<mat> fact_lu(mat A, mat b){
     /**
@@ -103,12 +102,32 @@ mat sust_adelan(mat A, mat b){
     return X;
 }
 
+
+
+bool esValida(mat A){
+	int n = A.n_rows;
+	int j = 0;
+	for (int i = 0; i < n; i++){
+		mat cols = A.cols(0, j);
+		mat rows = A.rows(0,i);
+		mat submat = A( span(0, i), span(0, j)); 
+		cout << submat << endl; 
+		j += 1;
+		double deter = (double)det(submat);
+		
+		if (deter == numeric_limits<double>::epsilon()){
+			return false;
+			} 
+	}
+	return true;
+}
+
 int main(){
     mat A = {{4, -2, 1}, {20, -7, 12 }, {-8, 13, 17}};
     mat b1 = {11, 70, 17};
     mat b = b1.t();
     cout << "Sistema Ax = b a resolver:  \n" << endl;
-    cout << "Matriz A: "<< A << "\n" << endl;
+    cout << "Matriz A: \n "<< A << "\n" << endl;
     cout << "\n Vector b: "<< b1 << "\n" <<  endl;
     vector<mat> LU = fact_lu(A, b);
     mat L = LU.at(0);
@@ -117,5 +136,6 @@ int main(){
     cout << "\n Vector solución X \n "<< endl;
     mat X = sust_atras(U, y);
     cout << X << endl;  
+
     return 0;
 }
