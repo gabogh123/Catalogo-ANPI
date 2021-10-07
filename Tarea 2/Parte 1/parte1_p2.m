@@ -1,13 +1,13 @@
-function jacobi()
+function parte1_p2()
   clc; clear;
   
-  q = [1:1:30];
-  p = [31:1:60];
-  m = 30;
+  q = [1:0.1:25];
+  p = [1:0.1:25];
+  m = 242;
 
   A = tridiagonal(p,q,m)
-  b = [5 6 4]';
-  x = [1 1 1]';
+  b = ones(242,1);
+  x = zeros(241,1);
   tol = 0.0001;
   iterMax = 1000;
   
@@ -43,9 +43,9 @@ endfunction
 
 function res = tridiagonal(p,q,m)
   
-  q = [1:1:30];
-  p = [31:1:60];
-  m = 30;  
+  q = [1:0.1:25];
+  p = [1:0.1:25];
+  m = 242; 
    
   m = length(p);
   if (length(p) == m)
