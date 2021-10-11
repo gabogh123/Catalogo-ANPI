@@ -5,28 +5,12 @@
 using namespace std;
 using namespace arma;
 
-mat get_A(){ // Genera la matriz A 45x30
-	int iterMax = 1000;
-    int tol = 1e-15;
-    
-    mat A(45,30);
-    
-    for (int i=0; i<45; i++) {
-        for (int j=0; j<30; j++) {
-          
-            
-            A(i,j) = (pow(i+1,2) + pow(j+1,2));
-        }
-    }
-    mat A_t = A.t();
 
-    return A;
-}
 
 vector<mat> get_X0X1(mat A){
-	vector<mat> initial_mats;
-	mat A_t = A.t();
-	double a1 = 5 * 1e-10;
+    vector<mat> initial_mats;
+    mat A_t = A.t();
+    double a1 = 5 * 1e-10;
     double a2 = 2 * 1e-11;
     mat Xk_anterior = a1 * A_t; // X0
     mat Xk = a2 * A_t; // X1
@@ -36,7 +20,7 @@ vector<mat> get_X0X1(mat A){
     return initial_mats;
 }
 
-mat parte3_p1(mat A) {
+mat pseudo_inv(mat A, mat b) {
     /**
         Método iterativo para aproximar la pseudoinversa de una matriz A, el cual se deduce del método de la secante para aproximar un cero de la función no lineal.
         Parámetros de entrada:
@@ -44,6 +28,7 @@ mat parte3_p1(mat A) {
             b: vector xi elementos, donde i es la cantidad de incógnitas
         Salida: vector xk
         **/
+    
     int iterMax = 1000;
     double tol = 1e-5;
     
@@ -67,8 +52,6 @@ mat parte3_p1(mat A) {
         error = norm(to_norm, "fro"); //Se calcula la norma de frobenius
         
         if (error < tol){ // Condicion de parada
-            cout << "break" << endl;
-            cout << "Error: " << error;
             break;
         }
         
@@ -86,9 +69,66 @@ mat parte3_p1(mat A) {
 
 
 
+
+
+mat get_c(mat delta) {
+    /**
+        Esta función obtiene el vector c el cual permite conocer si los valores del delta se salen del rango
+        Parámetros de entrada:
+            delta: vector delta
+            
+        Salida: vector c
+        **/
+    mat c = delta;
+    for (int i=0; i<delta.size(); i++) {
+        if (-0.75 > delta(i) > 0.75){ // Revisa si esta fuera del rango
+            c(i) = 0.75;
+        } else {
+            c(i) = 0;
+        }
+    }
+    return c;
+}
+
+
+
+mat parte3_p2(mat A, mat b) {
+    
+    mat pinv_A = pseudo_inv(A,b); // Calcula la pinv
+    mat delta = pinv_A * b; // Calcula el delta inicial
+    mat c = get_c(delta); // Obtiene el vector c
+    mat A_mod = A;
+    
+    for (int i=0; i<A_mod.n_rows; i++) { // Se crea la matriz A modificada con la ultima columna con valores iguales a cero
+            for (int j=0; j<A_mod.n_cols; j++) {
+                if (j == A_mod.n_cols-1) {
+                    A_mod(i,j) = 0;
+                }
+            }
+        }
+    
+    mat pinv_A_mod = pinv_A;
+    
+    for (int k=1; k<1000; k++){
+        
+        if (c.is_zero()) { // Se revisa si el vector c no tiene ningun valor diferente a cero
+            break;
+        } else { // Se calcula de nuevo el delta y el c
+            pinv_A_mod = pseudo_inv(A_mod,b);
+            delta = -c + pinv_A_mod * (b + (A * c));
+            get_c(delta);
+        }
+        
+    }
+    cout << delta << endl;
+    return delta;
+}
+
 int main() {
-    mat A = get_A();
-    mat pinv_A = parte3_p1(A);
-    cout<<"Xk final: \n"<<pinv_A<<endl;
+    mat A={{2,-2,-2,-1},{1,1,-3,-2},{2,-2,-1,-1}};
+    mat b={0.5,1,1};
+    b = b.t();
+    parte3_p2(A, b);
+   
     return 0;
 }
