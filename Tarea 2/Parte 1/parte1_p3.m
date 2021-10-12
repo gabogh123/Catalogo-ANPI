@@ -59,7 +59,7 @@ function res = tridiagonal(p,q,m)
       endfor
     
   else
-    display('Error: Los vectores p y q no son del mismo tamaño');    
+    display('Error: Los vectores p y q no son del mismo tamaÃ±o');    
     
   endif 
   
