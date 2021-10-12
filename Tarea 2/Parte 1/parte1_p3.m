@@ -1,43 +1,62 @@
 pkg load parallel;
 
-function [xk,error] = parte1_p3 (A, b, x, m, tol, iterMax)
+function [xk,error] = jacobi(A,b,x,m,tol,iterMax)
   
-  q = [1:0.1:25];
   p = [1:0.1:25];
+  q = [1:0.1:25];
   m = 242;
-
-  A = tridiagonal(p,q,m)
+  
+  A = tridiagonal(p,q,m);
+  
   b = ones(242,1);
   x = zeros(241,1);
   tol = 0.0001;
   iterMax = 1000;
   
-  
   error = 0;
+  
   xk = x;
   
-  for iter = 1: iterMax
+  for iter = 1:iterMax
     
     vector_i = 1:m;
     
-    sum = @(i)  (b(i)-(A(i,1:i-1)*xk(1:i-1)+A(i,i+1:n)*xk(i+1:n)))/ (A(i,i));
+    xk = pararrayfun(nproc, @(i) sumatoria(m,A,b,xk,i), vector_i);
     
+    error = norm((A*xk')-b);
     
-    xk = pararrayfun(nproc, sum, vector_i);
-    
-    if norm((A*xk)-b)<tol
-      
+    if error < tol
       break
+      
     endif
     
   endfor
- 
-endfunction   
+endfunction 
+
+function xk = sumatoria(A,b,m,xk,i)
+  
+  suma = 0;
+  for j = 1:m
+    
+    if j != i
+      
+      suma = suma+(A(i,j)*xk(j));
+      
+    endif
+    
+  endfor
+  
+  xk = (1/A(i,i)) * (b(i) - suma);
+  
+  return;
+endfunction 
 
 
 function res = tridiagonal(p,q,m)
   
-
+  q = [1:0.1:25];
+  p = [1:0.1:25];
+  m = 242;
    
   m = length(p);
   if (length(p) == m)
@@ -59,10 +78,10 @@ function res = tridiagonal(p,q,m)
       endfor
     
   else
-    display('Error: Los vectores p y q no son del mismo tamaÃ±o');    
+    display('Error: Los vectores p y q no son del mismo tamaño');    
     
   endif 
   
-  res = A
+  res = A;
     
 endfunction
