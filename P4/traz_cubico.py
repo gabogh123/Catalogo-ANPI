@@ -7,7 +7,7 @@ def traz_cubico(x_n, y_n):
         -Trazador Cúbico Natural
         Parámetros de entrada:
             x_n: vector de preimágenes
-            y_n: vector de preimágenes
+            y_n: vector de imágenes
         Parámetros de salida:
             S_i: vector simbólico de trazadores cúbicos
     """
@@ -145,6 +145,9 @@ def get_pq(a, b, c, u_i):
     return p_i, q_i
 
 #--------------------Ejemplo presentación 9, diap 25-----------------------------#
+"""
+Donde cada par (x, y) pertenece a la función f(x) = 3*x*exp(x) - 2*exp(x)
+"""
 x_n = [1, 1.05, 1.07, 1.1]
 y_n = [2.718282, 3.286299, 3.527609, 3.905416]
 y = traz_cubico(x_n, y_n)
