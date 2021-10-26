@@ -71,8 +71,8 @@ def caller(f, x, x0):
     errors_plot(iteraciones, er)
 
 ejemplo_a()
-# ejemplo_b()
-# ejemplo_c()
-# ejemplo_d()
-# ejemplo_e()
-# ejemplo_g()
+ejemplo_b()
+ejemplo_c()
+ejemplo_d()
+ejemplo_e()
+ejemplo_g()

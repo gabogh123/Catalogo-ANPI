@@ -6,13 +6,13 @@ function parte1_p2()
   p = [1:0.1:25];
   m = 242;
 
-  A = tridiagonal(p,q,m)
+  A = tridiagonal(p,q,m);
   b = ones(242,1);
-  x = zeros(241,1);
+  x = zeros(242,1);
   tol = 0.00001;
   iterMax = 1000;
   
-  [xk k] = jacobimetodo(A,b,x,tol,iterMax)
+  [xk k] = jacobimetodo(A,b,x,tol,iterMax);
 
 endfunction
 
@@ -35,8 +35,8 @@ function [xk k] = jacobimetodo(A,b,x,tol,iterMax)
       
     endfor
     
-    if norm(xk-x,inf)<tol %Segundo criterio de parada 
-      
+    if norm(A*xk-b)<tol %Segundo criterio de parada 
+      norm(A*xk-b)
       break 
       
     endif
@@ -64,7 +64,7 @@ function res = tridiagonal(p,q,m)
       
       for k=2:m-1
         
-        A(k,k) = 2*(p(k)+q(k)); %Se rellena la matriz
+        A(k,k) = 2*(p(k-1)+q(k)); %Se rellena la matriz
        
       endfor
     
@@ -73,7 +73,7 @@ function res = tridiagonal(p,q,m)
     
   endif 
   
-  res = A
+  res = A;
     
 endfunction
 

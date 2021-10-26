@@ -1,6 +1,6 @@
 pkg load parallel;
 
-function [xk,error] = jacobi(A,b,x,m,tol,iterMax)
+function [xk,error] = parte1_p3(A,b,x,m,tol,iterMax)
   
   p = [1:0.1:25];
   q = [1:0.1:25];
