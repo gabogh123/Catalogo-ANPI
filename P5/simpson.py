@@ -11,7 +11,9 @@ from scipy import optimize
 # entradas: una funcion, un intervalo
 # salidas: aproximacion y cota de error
 
+
 def simpson(fEntrada, ab):
+    # x = Symbol("x")
     # se cambia la funcion de entrada a simbolico
     fs = sp.sympify(fEntrada)
     print("Funcion a utilizar: " , end ="")
@@ -24,8 +26,6 @@ def simpson(fEntrada, ab):
     # se obtienen los valores extremos del intervalo 
     a = ab[0]
     b = ab[n-1]
-    print('a',a)
-    print('b',b)
     # se conoce a y b, entonces calculamos (a+b)/2 -> c
     c = (a+b)/2
 
@@ -33,12 +33,9 @@ def simpson(fEntrada, ab):
     d = (b-a)/6
     
     # evaluamos la funcion en a, b y c
-    f_a = fs.subs('x',a)
-    f_b = fs.subs('x',b)
-    f_c = fs.subs('x',c)
-    print('fa',f_a)
-    print('fb',f_b)
-    print('fc',f_c)
+    f_a = fs.subs('x',float(a))
+    f_b = fs.subs('x',float(b))
+    f_c = fs.subs('x',float(c))
 
     # calculamos la aproximacion
     aproxSimpson = d * (f_a + (4 * f_c) + f_b)
