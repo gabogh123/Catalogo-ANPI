@@ -1,89 +1,109 @@
-function [xv,yv_ab]  = adam_bashford_4(func, a, b, n)
+function adam_bashford_4 ()
   
-    #Funcion que utiliza el metodo de adam brashfor de 4 pasos
-    #Entradas func: Ecuacion diferencial a calcularle la solucion   
-    #         a: valor inicial del intervalo 
-    #         b: valor final del intervalo
-    #         n: numero de puntos a utilizar
+  warning('off','all')
+    clc; clear;
     
-    [xv,yv]  = predictor_corrector(func, a, b, n) % se obtienen los vectores xv y yv
-    
-    h = (b - a) / (n - 1);
-    f=@(x,y) y-x.^2+1;
-    
-    yn_3 = yv(1); %y0
-    yn_2 = yv(2); %y1
-    yn_1 = yv(3); %y2
-    yn = yv(4); %y3
-    
-    yv_ab = [yn_3, yn_2, yn_1, yn]; % vector de las pre imagenes para el metodo de adam brashford
-    
-    for i = 4:n-1
-        y_next = yv(i) + (h/24) * (55 * f(xv(i),yv(i))) - (59 * f(xv(i-1),yv(i-1))) + (37 * f(xv(i-2),yv(i-2))) - (9 * f(xv(i-3),yv(i-3)));
-        yv_ab = [yv_ab, y_next];
-    endfor
-    yv_ab = transpose(yv_ab);
-    xv;
-    %pol = lagrange(xv, yv_ab)
-endfunction
+  % Ejemplo presentacion 12, diapositiva 64
 
+  fun = '1 + (x-y)^2';
+  itervalo = [2 4];
+  num_puntos = 11;
+  ini = [1 1.191 1.5964 1.8883];
+  [xv, yv, polinomio] = metodo_adam_bashford_4(fun, itervalo, num_puntos, ini)
+  
+  % Grafica de la solucion
+  hold on
+  x_g=itervalo(1):0.0001:itervalo(2);
+  polinomio1 = matlabFunction(sym(polinomio));
+  y_p=polinomio1(x_g);
+  plot(x_g,y_p,'b')
+  title('Metodo Adam Bashford')
+  xlabel('x')
+  ylabel('y(x)')
+  grid on;
+  
 
-
-
-
-function [x,y]  = predictor_corrector( func, a, b, n)
-    pkg load symbolic;
-    syms x y z
-    
-    #Funcion que calcula la solucion de una ecuacion diferencial 
-    #por medio del metodo de predictor corrector.
-    #Entradas func: Ecuacion diferencial a calcularle la solucion   
-    #         a: valor inicial del intervalo 
-    #         b: valor final del intervalo
-    #         n: numero de puntos a utilizar
-   
-    f = str2func(func); % por un error no conocido no funciona esto con la funcion de entrada por eso se setea en la linea de abajo manualmente
-    f=@(x,y) y-x.^2+1;
-    h = (b - a) / (n - 1);
-    y0 = 0.5;
-    x = [a];
-    y = [y0];
-    zn = [];
-   
-    for i = 1:n-1
-        x_temp = x(i) + h;
-        x = [x, x_temp];
-        zn = [zn, y(i) + h * f(x(i), y(i))]; % predictor
-        predict = y(i) + h * (f(x(i), y(i)) + f(x(i + 1), zn(i))) / 2; %corrector
-        y = [y, predict];
-        
-    endfor
-    x = transpose(x);
-    y = transpose(y);
-    
-    
-endfunction
-
-
-function Lk = fun_Lk(xv,k)
-  syms x
-  %k=0,1,....,n
-  n = length(xv) - 1;
-  Lk=1;
-  for j=0:n
-    if j~=k
-      Lk = Lk * (x - xv(j+1)) / (xv(k+1) - xv(j+1));
-    end    
-  end
-  Lk = expand(Lk);
+  
 end
 
-function p = lagrange(xv,yv)
+
+function pol=lagrange(xv,yv)
+  
+  % Metodo de Lagrange para el caclculo del polinomioinomio
+  % de itervalopolinomioacion
+  
+  % Parametros de entrada:
+  %   xv, yv: vetores de los pares ordenador a partir de
+  %     los cuales se calculara el polinomioinomio.
+  
+  % p =  polinomioinomio de itervalopolinomioacion de forma simbolica.
+  
   syms x
   n=length(xv)-1;
-  p=0;
+  pol=0;
   for k=0:n
-    p = p + yv(k+1) * fun_Lk(xv,k);
+    pol=pol+yv(k+1)*funcion_Lk(xv,k);
   end
-  p = expand(p);
+  pol=expand(pol);
 end
+
+function funcion_Lk=funcion_Lk(xv,k)
+  syms x
+  n=length(xv)-1;
+  funcion_Lk=1;
+  for j=0:n
+    if j~=k
+      funcion_Lk=funcion_Lk*(x-xv(j+1))/(xv(k+1)-xv(j+1));
+    end    
+  end
+  funcion_Lk=expand(funcion_Lk);
+end
+
+
+function [xv, yv, polinomio] = metodo_adam_bashford_4(fun, itervalo, num_puntos, ini)
+  
+%Funcion que calcula la solucion de una ecuacion diferencial 
+%Entradas: fun: funcion a evaluar
+%          itervalo: es el intervalo de la funcion a evaluar
+%          num_puntos: numero de puntos a analizar
+%          ini: corresponde al conjunto de valores iniciales
+  
+% Parametros de salida:
+% xv, yv:  vectores de valores aproximados 
+% polinomio: polinomio de interpolacion
+  
+  
+  
+%Inicializacion de valores
+
+  pkg load symbolic;
+  syms x y;
+  f1 = matlabFunction(sym(fun));
+  
+%Se calcula el paso h
+  a = itervalo(1);
+  b = itervalo(2);
+  
+  h=(b-a)/(num_puntos-1);
+  xv=a:h:b;
+  
+  % calculo de yv
+  y0 = ini(1);
+  y1 = ini(2);
+  y2 = ini(3);
+  y3 = ini(4);
+  yv = [y0 y1 y2 y3];
+
+  for n=4:num_puntos-1  
+    fk = f1(xv(n), yv(n));
+    fk_1 = f1(xv(n-1), yv(n-1));
+    fk_2 = f1(xv(n-2), yv(n-2));
+    fk_3 = f1(xv(n-3), yv(n-3));
+    yv(n+1)= yv(n)+ (h/24) * (55*fk - 59*fk_1 + 37*fk_2 - 9*fk_3);
+  end
+  
+%Se calcula el polinomio mediante el metodo de lagrange
+  polinomio = lagrange(xv, yv);
+  
+end
+
